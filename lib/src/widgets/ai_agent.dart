@@ -138,7 +138,7 @@ class _AIAgentState extends State<AIAgent> {
   String _statusText = '';
   ExecutionResult? _lastResult;
   bool _showCSAT = false;
-  DateTime _conversationStart = DateTime.now();
+  final DateTime _conversationStart = DateTime.now();
   List<AiMessage> _messages = const <AiMessage>[];
   List<ConversationSummary> _conversations = const <ConversationSummary>[];
   List<AiMessage> _supportMessages = const <AiMessage>[];

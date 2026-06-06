@@ -1,3 +1,10 @@
+## 0.2.7
+
+- Wire CSATSurvey into AgentChatBar after successful agent resolution in support mode.
+- Add afterMessagesContent prop to AgentChatBar for inline post-conversation widgets.
+- Fix proxy session deviceId race condition.
+- Add proxy error code handling (rate limits, budget exhaustion, session token limits).
+
 ## 0.2.6
 
 - Fixed Gemini "too much branching for serving" schema error by replacing flattened tool parameters with a single `action_input` JSON string field.
