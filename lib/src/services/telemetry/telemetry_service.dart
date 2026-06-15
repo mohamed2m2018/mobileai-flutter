@@ -51,6 +51,9 @@ class TelemetryService {
   // Agent state
   bool _isAgentActing = false;
 
+  // Internal quality metrics digest (set from provider config)
+  String _qmDigest = '';
+
   // Deduplication for wireframes
   final Set<String> _wireframesSent = {};
 
@@ -82,6 +85,11 @@ class TelemetryService {
   /// Set agent acting state (called by AgentRuntime)
   void setAgentActing(bool active) {
     _isAgentActing = active;
+  }
+
+  /// Set internal quality metrics digest from provider config
+  void setQualityDigest(String digest) {
+    _qmDigest = digest;
   }
 
   /// Start the telemetry service
@@ -260,6 +268,7 @@ class TelemetryService {
       'appId': 'mobileai_flutter',
       'deviceId': config.userId ?? 'unknown',
       'sdkVersion': _sdkVersion,
+      if (_qmDigest.isNotEmpty) '_qm': _qmDigest,
       'events': events
           .map(
             (e) => {

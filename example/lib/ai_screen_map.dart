@@ -6,7 +6,7 @@
 import 'package:mobileai_flutter/mobileai_flutter.dart';
 
 final shopFlowScreenMap = ScreenMap(
-  generatedAt: '2026-05-17T15:16:59.242778Z',
+  generatedAt: '2026-06-14T14:25:56.581025Z',
   framework: 'go_router',
   screens: <String, ScreenMapEntry>{
     '/home': ScreenMapEntry(

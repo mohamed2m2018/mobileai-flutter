@@ -86,29 +86,44 @@ class DatePickerTool implements AgentTool {
   }
 
   DateTime? _parseDate(String dateString) {
-    try {
-      // Try full ISO 8601 first
-      return DateTime.parse(dateString);
-    } catch (_) {
+    final trimmed = dateString.trim();
+
+    // Date only: YYYY-MM-DD
+    final dateOnly = RegExp(r'^\d{4}-\d{2}-\d{2}$').firstMatch(trimmed);
+    if (dateOnly != null) {
+      final parts = trimmed.split('-');
+      final year = int.parse(parts[0]);
+      final month = int.parse(parts[1]);
+      final day = int.parse(parts[2]);
+      if (month < 1 || month > 12) return null;
+      final result = DateTime(year, month, day);
+      if (result.year != year || result.month != month || result.day != day) {
+        return null;
+      }
+      return result;
+    }
+
+    // Date-time: YYYY-MM-DDTHH:mm:ss with optional fractional seconds/timezone
+    final dateTime = RegExp(
+      r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$',
+    ).firstMatch(trimmed);
+    if (dateTime != null) {
       try {
-        // Try date only (YYYY-MM-DD)
-        return DateTime.parse('${dateString}T00:00:00');
+        final result = DateTime.parse(trimmed);
+        final dateParts = trimmed.split('T')[0].split('-');
+        final year = int.parse(dateParts[0]);
+        final month = int.parse(dateParts[1]);
+        final day = int.parse(dateParts[2]);
+        if (result.year != year || result.month != month || result.day != day) {
+          return null;
+        }
+        return result;
       } catch (_) {
-        try {
-          // Try common formats
-          final parts = dateString.split('-');
-          if (parts.length == 3) {
-            final year = int.parse(parts[0]);
-            final month = int.parse(parts[1]);
-            final day = int.parse(
-              parts[2].split('T')[0],
-            ); // Handle time part if present
-            return DateTime(year, month, day);
-          }
-        } catch (_) {}
         return null;
       }
     }
+
+    return null;
   }
 
   String _formatDate(DateTime date) {

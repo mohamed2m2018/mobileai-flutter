@@ -2,43 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobileai_flutter/mobileai_flutter.dart';
 
+Future<BuildContext> _pumpContext(WidgetTester tester) async {
+  final key = GlobalKey<ScaffoldState>();
+  await tester.pumpWidget(
+    MaterialApp(
+      home: Scaffold(
+        key: key,
+        body: Container(),
+      ),
+    ),
+  );
+  return key.currentState!.context;
+}
+
 void main() {
   group('DatePickerTool', () {
-    late DatePickerTool tool;
-    late List<InteractiveElement> testElements;
-    late GlobalKey testKey;
-    late BuildContext testContext;
-
-    setUpAll(() async {
-      TestWidgetsFlutterBinding.ensureInitialized();
-      tool = DatePickerTool();
-      testKey = GlobalKey();
-
-      await pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            key: testKey,
-            body: Container(),
-          ),
-        ),
-      );
-
-      final scaffoldState = testKey.currentState as ScaffoldState?;
-      testContext = scaffoldState?.context ?? Element(const SizedBox()).renderObject;
-    });
-
-    setUp(() {
-      testElements = [
-        InteractiveElement(
-          index: 0,
-          type: ElementType.datePicker,
-          label: 'Birth Date',
-          element: Element(const SizedBox()).renderObject,
-        ),
-      ];
-    });
-
     test('definition has correct name and description', () {
+      final tool = DatePickerTool();
+
       expect(tool.definition.name, 'set_date');
       expect(tool.definition.description, contains('date'));
       expect(tool.definition.description, contains('ISO 8601'));
@@ -46,7 +27,17 @@ void main() {
       expect(tool.definition.parameters['date'], isNotNull);
     });
 
-    test('requires index and date parameters', () async {
+    testWidgets('requires index and date parameters', (WidgetTester tester) async {
+      final tool = DatePickerTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.datePicker,
+          label: 'Birth Date',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -71,7 +62,17 @@ void main() {
       );
     });
 
-    test('throws when element not found', () async {
+    testWidgets('throws when element not found', (WidgetTester tester) async {
+      final tool = DatePickerTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.datePicker,
+          label: 'Birth Date',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -83,12 +84,22 @@ void main() {
         throwsA(isA<Exception>().having(
           (e) => e.toString(),
           'message',
-          contains('not found'),
+          contains('STALE_TARGET'),
         )),
       );
     });
 
-    test('accepts valid ISO 8601 date formats', () async {
+    testWidgets('accepts valid ISO 8601 date formats', (WidgetTester tester) async {
+      final tool = DatePickerTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.datePicker,
+          label: 'Birth Date',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -111,7 +122,17 @@ void main() {
       }
     });
 
-    test('throws for invalid date formats', () async {
+    testWidgets('throws for invalid date formats', (WidgetTester tester) async {
+      final tool = DatePickerTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.datePicker,
+          label: 'Birth Date',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -136,7 +157,17 @@ void main() {
       }
     });
 
-    test('throws for empty date string', () async {
+    testWidgets('throws for empty date string', (WidgetTester tester) async {
+      final tool = DatePickerTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.datePicker,
+          label: 'Birth Date',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,

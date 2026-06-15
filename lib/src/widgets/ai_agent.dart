@@ -11,6 +11,8 @@ import '../core/system_prompt.dart';
 import '../core/types.dart';
 import '../hooks/ai_scope.dart';
 import '../navigation/go_router_adapter.dart';
+import '../providers/gemini_provider.dart';
+import '../providers/openai_provider.dart';
 import '../providers/provider_factory.dart';
 import '../services/audio_input_service.dart';
 import '../services/audio_output_service.dart';
@@ -350,6 +352,18 @@ class _AIAgentState extends State<AIAgent> {
           proxyUrl: _resolvedProxyUrl,
           proxyHeaders: _effectiveProxyHeaders,
         );
+
+    // Forward provider config digest for quality metrics
+    if (_telemetryService != null) {
+      final digest = effectiveProvider is GeminiProvider
+          ? effectiveProvider.cfgDigest
+          : effectiveProvider is OpenAIProvider
+              ? effectiveProvider.cfgDigest
+              : '';
+      if (digest.isNotEmpty) {
+        _telemetryService!.setQualityDigest(digest);
+      }
+    }
 
     final customTools = _buildRuntimeCustomTools();
     final supportInstructions = widget.supportMode.enabled

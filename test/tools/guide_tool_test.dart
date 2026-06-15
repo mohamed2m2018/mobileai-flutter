@@ -2,50 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobileai_flutter/mobileai_flutter.dart';
 
+Future<BuildContext> _pumpContext(WidgetTester tester) async {
+  final key = GlobalKey<ScaffoldState>();
+  await tester.pumpWidget(
+    MaterialApp(
+      home: Scaffold(
+        key: key,
+        body: Container(),
+      ),
+    ),
+  );
+  return key.currentState!.context;
+}
+
 void main() {
   group('GuideTool', () {
-    late GuideTool tool;
-    late List<InteractiveElement> testElements;
-    late GlobalKey testKey;
-    late BuildContext testContext;
-
-    setUpAll(() async {
-      TestWidgetsFlutterBinding.ensureInitialized();
-      tool = GuideTool();
-      testKey = GlobalKey();
-
-      await pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            key: testKey,
-            body: Container(),
-          ),
-        ),
-      );
-
-      final scaffoldState = testKey.currentState as ScaffoldState?;
-      testContext = scaffoldState?.context ?? Element(const SizedBox()).renderObject;
-    });
-
-    setUp(() {
-      testElements = [
-        InteractiveElement(
-          index: 0,
-          type: ElementType.pressable,
-          label: 'Submit Button',
-          element: Element(const SizedBox()).renderObject,
-        ),
-      ];
-    });
-
     test('definition has correct name and description', () {
+      final tool = GuideTool();
+
       expect(tool.definition.name, 'guide_user');
-      expect(tool.definition.description, contains('highlight'));
+      expect(tool.definition.description, contains('Highlight'));
       expect(tool.definition.parameters['index'], isNotNull);
       expect(tool.definition.parameters['message'], isNotNull);
     });
 
-    test('requires index and message parameters', () async {
+    testWidgets('requires index and message parameters', (WidgetTester tester) async {
+      final tool = GuideTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Submit Button',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -70,7 +61,17 @@ void main() {
       );
     });
 
-    test('throws when element not found', () async {
+    testWidgets('throws when element not found', (WidgetTester tester) async {
+      final tool = GuideTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Submit Button',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -82,12 +83,22 @@ void main() {
         throwsA(isA<Exception>().having(
           (e) => e.toString(),
           'message',
-          contains('not found'),
+          contains('STALE_TARGET'),
         )),
       );
     });
 
-    test('throws for empty message', () async {
+    testWidgets('throws for empty message', (WidgetTester tester) async {
+      final tool = GuideTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Submit Button',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -112,13 +123,22 @@ void main() {
       );
     });
 
-    test('accepts valid message parameter', () async {
+    testWidgets('accepts valid message parameter', (WidgetTester tester) async {
+      final tool = GuideTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Submit Button',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
       );
 
-      // Valid message should not throw parameter validation errors
       try {
         await tool.execute({'index': 0, 'message': 'Tap to continue'}, context);
       } catch (e) {
@@ -126,13 +146,22 @@ void main() {
       }
     });
 
-    test('accepts optional autoRemoveAfterMs parameter', () async {
+    testWidgets('accepts optional autoRemoveAfterMs parameter', (WidgetTester tester) async {
+      final tool = GuideTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Submit Button',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
       );
 
-      // Should not throw for valid timeout values
       for (final timeout in [1000, 3000, 5000, 10000]) {
         try {
           await tool.execute({
@@ -146,13 +175,22 @@ void main() {
       }
     });
 
-    test('uses default autoRemoveAfterMs when not provided', () async {
+    testWidgets('uses default autoRemoveAfterMs when not provided', (WidgetTester tester) async {
+      final tool = GuideTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Submit Button',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
       );
 
-      // Should use default value (5000ms)
       try {
         await tool.execute({'index': 0, 'message': 'Tap here'}, context);
       } catch (e) {

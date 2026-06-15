@@ -2,53 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobileai_flutter/mobileai_flutter.dart';
 
+Future<BuildContext> _pumpContext(WidgetTester tester) async {
+  final key = GlobalKey<ScaffoldState>();
+  await tester.pumpWidget(
+    MaterialApp(
+      home: Scaffold(
+        key: key,
+        body: Container(),
+      ),
+    ),
+  );
+  return key.currentState!.context;
+}
+
 void main() {
   group('LongPressTool', () {
-    late LongPressTool tool;
-    late List<InteractiveElement> testElements;
-    late GlobalKey testKey;
-    late BuildContext testContext;
+    test('definition has correct name and description', () {
+      final tool = LongPressTool();
 
-    setUpAll(() async {
-      // Initialize test environment
-      TestWidgetsFlutterBinding.ensureInitialized();
-      tool = LongPressTool();
-      testKey = GlobalKey();
-
-      // Create a test widget tree to get a valid BuildContext
-      await pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            key: testKey,
-            body: Container(),
-          ),
-        ),
-      );
-
-      // Find the Scaffold's context
-      final scaffoldState = testKey.currentState as ScaffoldState?;
-      testContext = scaffoldState?.context ?? Element(const SizedBox()).renderObject;
+      expect(tool.definition.name, 'long_press');
+      expect(tool.definition.description, contains('Long-press'));
+      expect(tool.definition.parameters['index'], isNotNull);
     });
 
-    setUp(() {
-      // Reset test elements for each test
-      testElements = [
+    testWidgets('requires index parameter', (WidgetTester tester) async {
+      final tool = LongPressTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
         InteractiveElement(
           index: 0,
           type: ElementType.pressable,
           label: 'Test Button',
-          element: Element(const SizedBox()).renderObject,
+          element: null,
         ),
       ];
-    });
-
-    test('definition has correct name and description', () {
-      expect(tool.definition.name, 'long_press');
-      expect(tool.definition.description, contains('long-press'));
-      expect(tool.definition.parameters['index'], isNotNull);
-    });
-
-    test('requires index parameter', () async {
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -64,7 +51,17 @@ void main() {
       );
     });
 
-    test('throws when element not found', () async {
+    testWidgets('throws when element not found', (WidgetTester tester) async {
+      final tool = LongPressTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Test Button',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -76,21 +73,52 @@ void main() {
         throwsA(isA<Exception>().having(
           (e) => e.toString(),
           'message',
-          contains('not found'),
+          contains('STALE_TARGET'),
         )),
       );
     });
 
-    test('accepts valid index parameter', () async {
+    testWidgets('uses default duration when not provided', (WidgetTester tester) async {
+      final tool = LongPressTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Test Button',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
       );
 
-      // This should not throw a parameter validation error
-      // (may fail execution due to lack of actual widget)
       try {
         await tool.execute({'index': 0}, context);
+      } catch (e) {
+        expect(e.toString(), isNot(contains('Missing required')));
+      }
+    });
+
+    testWidgets('accepts custom duration', (WidgetTester tester) async {
+      final tool = LongPressTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Test Button',
+          element: null,
+        ),
+      ];
+      final context = ToolContext(
+        rootContext: testContext,
+        lastElements: testElements,
+      );
+
+      try {
+        await tool.execute({'index': 0, 'durationMs': 2000}, context);
       } catch (e) {
         expect(e.toString(), isNot(contains('Missing required')));
       }

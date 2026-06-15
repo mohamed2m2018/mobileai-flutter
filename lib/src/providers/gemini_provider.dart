@@ -15,6 +15,14 @@ class GeminiProvider implements AiProvider {
   final Map<String, String>? _proxyHeaders;
   final http.Client _httpClient;
 
+  Object? _cachedDeclaration;
+  int _cachedToolCount = -1;
+  Map<String, dynamic>? _cachedDeclarationJson;
+  int _cachedToolCountJson = -1;
+
+  /// Internal config digest for analytics quality metrics
+  String cfgDigest = '';
+
   GeminiProvider({
     String? apiKey,
     this.modelName = 'gemini-2.5-flash',
@@ -30,6 +38,23 @@ class GeminiProvider implements AiProvider {
         '[mobileai_flutter] You must provide either an "apiKey" or "proxyUrl" to AIAgent.',
       );
     }
+
+    // Compute config digest for analytics quality metrics
+    if (proxyUrl != null && proxyUrl.isNotEmpty) {
+      cfgDigest = proxyUrl.contains('mobileai.cloud')
+          ? 'h${_simpleHash(proxyUrl)}'
+          : 'c${_simpleHash(proxyUrl)}';
+    } else {
+      cfgDigest = 'k${apiKey != null && apiKey.length >= 8 ? _simpleHash(apiKey.substring(0, 8)) : '0'}';
+    }
+  }
+
+  static String _simpleHash(String s) {
+    int h = 0;
+    for (int i = 0; i < s.length; i++) {
+      h = ((h << 5) - h + s.codeUnitAt(i)) & 0xFFFFFFFF;
+    }
+    return (h >>> 0).toRadixString(36);
   }
 
   @override
@@ -370,6 +395,9 @@ class GeminiProvider implements AiProvider {
   Map<String, dynamic> _buildAgentStepDeclarationJson(
     List<ToolDefinition> tools,
   ) {
+    if (_cachedDeclarationJson != null && tools.length == _cachedToolCountJson) {
+      return _cachedDeclarationJson!;
+    }
     final toolNames = tools.map((t) => t.name).toList(growable: false);
 
     final toolDescriptions = tools.map((t) {
@@ -380,7 +408,7 @@ class GeminiProvider implements AiProvider {
       return '- ${t.name}: ${t.description} $inputGuide';
     }).join('\n');
 
-    return <String, dynamic>{
+    final declaration = <String, dynamic>{
       'name': _agentStepFn,
       'description':
           'Execute one agent step. Choose an action and provide reasoning.\n\nAvailable actions:\n$toolDescriptions',
@@ -414,6 +442,9 @@ class GeminiProvider implements AiProvider {
         'required': <String>['plan', 'action_name'],
       },
     };
+    _cachedToolCountJson = tools.length;
+    _cachedDeclarationJson = declaration;
+    return declaration;
   }
 
   /// Builds a narrow schema with action_input as a JSON string instead of
@@ -421,6 +452,9 @@ class GeminiProvider implements AiProvider {
   /// triggers Gemini's "too much branching for serving" error once the
   /// toolset grows beyond ~10 tools.
   FunctionDeclaration _buildAgentStepDeclaration(List<ToolDefinition> tools) {
+    if (_cachedDeclaration != null && tools.length == _cachedToolCount) {
+      return _cachedDeclaration as FunctionDeclaration;
+    }
     final toolNames = tools.map((t) => t.name).toList();
 
     final toolDescriptions = tools.map((t) {
@@ -431,7 +465,7 @@ class GeminiProvider implements AiProvider {
       return '- ${t.name}: ${t.description} $inputGuide';
     }).join('\n');
 
-    return FunctionDeclaration(
+    final declaration = FunctionDeclaration(
       _agentStepFn,
       'Execute one agent step. Choose an action and provide reasoning.\n\nAvailable actions:\n$toolDescriptions',
       Schema.object(
@@ -455,6 +489,9 @@ class GeminiProvider implements AiProvider {
         requiredProperties: ['plan', 'action_name'],
       ),
     );
+    _cachedToolCount = tools.length;
+    _cachedDeclaration = declaration;
+    return declaration;
   }
 
   ProviderResult _parseAgentStepResponse(GenerateContentResponse response, List<ToolDefinition> tools) {

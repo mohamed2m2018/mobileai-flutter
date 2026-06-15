@@ -37,6 +37,8 @@ class AgentRuntime {
   late final PlatformAdapter _platformAdapter;
 
   final Map<String, AgentTool> _tools = {};
+  List<ToolDefinition>? _cachedProviderTools;
+  Map<String, ToolDefinition>? _cachedProviderToolMap;
   final List<AgentStep> _history = [];
   bool _isRunning = false;
   bool _isCancelRequested = false;
@@ -525,6 +527,7 @@ class AgentRuntime {
   }
 
   List<ToolDefinition> getTools() {
+    if (_cachedProviderTools != null) return _cachedProviderTools!;
     final allTools = _tools.values.map((t) => t.definition).toList();
 
     // Add dynamically registered actions
@@ -784,6 +787,8 @@ class AgentRuntime {
       allTools.add(entry.value);
     }
 
+    _cachedProviderTools = allTools;
+    _cachedProviderToolMap = {for (final t in allTools) t.name: t};
     return allTools;
   }
 
@@ -1530,8 +1535,11 @@ class AgentRuntime {
           _pendingCriticalVerification = null;
         }
 
-        // Let UI settle after action (300ms matches RN default)
-        await Future.delayed(const Duration(milliseconds: 300));
+        // Step delay — skip for non-UI tools (no render settle needed)
+        const nonUiTools = {'done', 'ask_user', 'wait', 'capture_screenshot', 'query_knowledge', 'query_data', 'escalate_to_human', 'report_issue', 'guide_user', 'simplify', 'restore', 'web_search'};
+        if (!nonUiTools.contains(actionNameSafe)) {
+          await Future.delayed(const Duration(milliseconds: 300));
+        }
       }
 
       return ExecutionResult(

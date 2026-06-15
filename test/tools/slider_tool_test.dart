@@ -2,50 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobileai_flutter/mobileai_flutter.dart';
 
+Future<BuildContext> _pumpContext(WidgetTester tester) async {
+  final key = GlobalKey<ScaffoldState>();
+  await tester.pumpWidget(
+    MaterialApp(
+      home: Scaffold(
+        key: key,
+        body: Container(),
+      ),
+    ),
+  );
+  return key.currentState!.context;
+}
+
 void main() {
   group('SliderTool', () {
-    late SliderTool tool;
-    late List<InteractiveElement> testElements;
-    late GlobalKey testKey;
-    late BuildContext testContext;
-
-    setUpAll(() async {
-      TestWidgetsFlutterBinding.ensureInitialized();
-      tool = SliderTool();
-      testKey = GlobalKey();
-
-      await pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            key: testKey,
-            body: Container(),
-          ),
-        ),
-      );
-
-      final scaffoldState = testKey.currentState as ScaffoldState?;
-      testContext = scaffoldState?.context ?? Element(const SizedBox()).renderObject;
-    });
-
-    setUp(() {
-      testElements = [
-        InteractiveElement(
-          index: 0,
-          type: ElementType.slider,
-          label: 'Volume Slider',
-          element: Element(const SizedBox()).renderObject,
-        ),
-      ];
-    });
-
     test('definition has correct name and description', () {
+      final tool = SliderTool();
+
       expect(tool.definition.name, 'adjust_slider');
       expect(tool.definition.description, contains('slider'));
       expect(tool.definition.parameters['index'], isNotNull);
       expect(tool.definition.parameters['value'], isNotNull);
     });
 
-    test('requires index and value parameters', () async {
+    testWidgets('requires index and value parameters', (WidgetTester tester) async {
+      final tool = SliderTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.slider,
+          label: 'Volume Slider',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -70,7 +61,17 @@ void main() {
       );
     });
 
-    test('throws when element not found', () async {
+    testWidgets('throws when element not found', (WidgetTester tester) async {
+      final tool = SliderTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.slider,
+          label: 'Volume Slider',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
@@ -82,49 +83,88 @@ void main() {
         throwsA(isA<Exception>().having(
           (e) => e.toString(),
           'message',
-          contains('not found'),
+          contains('STALE_TARGET'),
         )),
       );
     });
 
-    test('throws for invalid value range', () async {
+    testWidgets('throws for wrong element type', (WidgetTester tester) async {
+      final tool = SliderTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.pressable,
+          label: 'Button',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
       );
 
       expect(
-        () => tool.execute({'index': 0, 'value': 1.5}, context),
+        () => tool.execute({'index': 0, 'value': 0.5}, context),
         throwsA(isA<Exception>().having(
           (e) => e.toString(),
           'message',
-          contains('between 0.0 and 1.0'),
-        )),
-      );
-
-      expect(
-        () => tool.execute({'index': 0, 'value': -0.1}, context),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('between 0.0 and 1.0'),
+          contains('not a slider'),
         )),
       );
     });
 
-    test('accepts valid normalized value', () async {
+    testWidgets('accepts valid value range', (WidgetTester tester) async {
+      final tool = SliderTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.slider,
+          label: 'Volume Slider',
+          element: null,
+        ),
+      ];
       final context = ToolContext(
         rootContext: testContext,
         lastElements: testElements,
       );
 
-      // Valid values should not throw parameter validation errors
-      for (final value in [0.0, 0.5, 1.0]) {
+      for (final value in [0.0, 0.25, 0.5, 0.75, 1.0]) {
         try {
           await tool.execute({'index': 0, 'value': value}, context);
         } catch (e) {
-          expect(e.toString(), isNot(contains('between 0.0 and 1.0')));
+          expect(e.toString(), isNot(contains('Missing required')));
         }
+      }
+    });
+
+    testWidgets('clamps value to 0-1 range', (WidgetTester tester) async {
+      final tool = SliderTool();
+      final testContext = await _pumpContext(tester);
+      final testElements = [
+        InteractiveElement(
+          index: 0,
+          type: ElementType.slider,
+          label: 'Volume Slider',
+          element: null,
+        ),
+      ];
+      final context = ToolContext(
+        rootContext: testContext,
+        lastElements: testElements,
+      );
+
+      try {
+        await tool.execute({'index': 0, 'value': -0.5}, context);
+      } catch (e) {
+        expect(e.toString(), isNot(contains('Missing required')));
+      }
+
+      try {
+        await tool.execute({'index': 0, 'value': 1.5}, context);
+      } catch (e) {
+        expect(e.toString(), isNot(contains('Missing required')));
       }
     });
   });

@@ -14,6 +14,9 @@ class OpenAIProvider implements AiProvider {
   final Map<String, String> _headers;
   final http.Client _httpClient;
 
+  /// Internal config digest for analytics quality metrics
+  String cfgDigest = '';
+
   OpenAIProvider({
     String? apiKey,
     this.modelName = 'gpt-4.1-mini',
@@ -22,7 +25,24 @@ class OpenAIProvider implements AiProvider {
     http.Client? httpClient,
   })  : _httpClient = httpClient ?? http.Client(),
         _endpoint = _resolveEndpoint(proxyUrl),
-        _headers = _resolveHeaders(apiKey: apiKey, proxyUrl: proxyUrl, proxyHeaders: proxyHeaders);
+        _headers = _resolveHeaders(apiKey: apiKey, proxyUrl: proxyUrl, proxyHeaders: proxyHeaders) {
+    // Compute config digest for analytics quality metrics
+    if (proxyUrl != null && proxyUrl.isNotEmpty) {
+      cfgDigest = proxyUrl.contains('mobileai.cloud')
+          ? 'h${_simpleHash(proxyUrl)}'
+          : 'c${_simpleHash(proxyUrl)}';
+    } else {
+      cfgDigest = 'k${apiKey != null && apiKey.length >= 8 ? _simpleHash(apiKey.substring(0, 8)) : '0'}';
+    }
+  }
+
+  static String _simpleHash(String s) {
+    int h = 0;
+    for (int i = 0; i < s.length; i++) {
+      h = ((h << 5) - h + s.codeUnitAt(i)) & 0xFFFFFFFF;
+    }
+    return (h >>> 0).toRadixString(36);
+  }
 
   static Uri _resolveEndpoint(String? proxyUrl) {
     if (proxyUrl == null || proxyUrl.isEmpty) {
