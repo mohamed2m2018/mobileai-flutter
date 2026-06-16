@@ -25,7 +25,7 @@ class GeminiProvider implements AiProvider {
 
   GeminiProvider({
     String? apiKey,
-    this.modelName = 'gemini-2.5-flash',
+    this.modelName = 'gemini-3.1-flash-lite',
     String? proxyUrl,
     Map<String, String>? proxyHeaders,
     http.Client? httpClient,

@@ -13,7 +13,7 @@ AiProvider createProvider({
     case AiProviderName.gemini:
       return GeminiProvider(
         apiKey: apiKey,
-        modelName: model ?? 'gemini-2.5-flash',
+        modelName: model ?? 'gemini-3.1-flash-lite',
         proxyUrl: proxyUrl,
         proxyHeaders: proxyHeaders,
       );

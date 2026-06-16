@@ -4,7 +4,7 @@ import '../providers/provider_factory.dart';
 import 'types.dart';
 
 const Map<AiProviderName, String> defaultGuardModels = {
-  AiProviderName.gemini: 'gemini-2.5-flash-lite',
+  AiProviderName.gemini: 'gemini-3.1-flash-lite',
   AiProviderName.openai: 'gpt-5.4-nano',
 };
 
