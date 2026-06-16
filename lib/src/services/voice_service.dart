@@ -246,7 +246,7 @@ class VoiceService {
     final apiKey = config.apiKey?.trim();
     if (apiKey == null || apiKey.isEmpty) {
       throw StateError(
-        '[mobileai_flutter] Voice mode requires either apiKey or voiceProxyUrl/proxyUrl.',
+        '[twomilia_flutter] Voice mode requires either apiKey or voiceProxyUrl/proxyUrl.',
       );
     }
     return Uri.parse(

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobileai_flutter/mobileai_flutter.dart';
+import 'package:twomilia_flutter/twomilia_flutter.dart';
 
 void main() {
   tearDown(() {

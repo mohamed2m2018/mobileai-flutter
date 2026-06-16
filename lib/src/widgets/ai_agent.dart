@@ -271,12 +271,12 @@ class _AIAgentState extends State<AIAgent> {
     await _restoreSupportIfNeeded();
   }
 
-  static const String _defaultMobileAIBase = 'https://mobileai.cloud';
+  static const String _defaultTwomiliaBase = 'https://twomilia.com';
   static const String _hostedTextProxyPath = '/api/v1/hosted-proxy/text';
 
   String? get _resolvedProxyUrl {
     if (widget.proxyUrl != null) return widget.proxyUrl;
-    if (_analyticsKey != null) return '$_defaultMobileAIBase$_hostedTextProxyPath';
+    if (_analyticsKey != null) return '$_defaultTwomiliaBase$_hostedTextProxyPath';
     return null;
   }
 
@@ -450,7 +450,7 @@ class _AIAgentState extends State<AIAgent> {
     });
 
     return [
-      '### MobileAI Registered Data Sources',
+      '### Twomilia Registered Data Sources',
       'The app exposes live data sources you can query with `query_data(source, query)`.',
       'Use them for recommendations, catalog lookup, live pricing, inventory, order status, or any structured data that is better fetched directly than inferred from the current screen.',
       ...lines,

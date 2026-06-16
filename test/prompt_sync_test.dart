@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobileai_flutter/src/core/rn_prompt_bundle.g.dart';
-import 'package:mobileai_flutter/src/core/system_prompt.dart';
-import 'package:mobileai_flutter/src/support/support_prompt.dart';
-import 'package:mobileai_flutter/src/support/types.dart';
+import 'package:twomilia_flutter/src/core/rn_prompt_bundle.g.dart';
+import 'package:twomilia_flutter/src/core/system_prompt.dart';
+import 'package:twomilia_flutter/src/support/support_prompt.dart';
+import 'package:twomilia_flutter/src/support/types.dart';
 
 void main() {
   test('RN prompt bundle stays in sync with React Native source', () async {

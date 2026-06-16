@@ -1,6 +1,6 @@
 # API Reference
 
-This page summarizes the main public APIs exported by `package:mobileai_flutter/mobileai_flutter.dart`.
+This page summarizes the main public APIs exported by `package:twomilia_flutter/twomilia_flutter.dart`.
 
 ## `AIAgent`
 
@@ -108,7 +108,7 @@ Default guard models:
 
 | Prop | Type | Notes |
 | --- | --- | --- |
-| `telemetry` | `TelemetryConfig?` | MobileAI telemetry configuration. |
+| `telemetry` | `TelemetryConfig?` | Twomilia telemetry configuration. |
 | `supportMode` | `SupportModeConfig` | Support assistant and escalation configuration. |
 | `enableVoice` | `bool` | Enable voice mode surface. |
 | `voiceProxyUrl` | `String?` | Voice WebSocket proxy URL. |

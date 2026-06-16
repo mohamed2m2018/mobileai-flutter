@@ -6,7 +6,7 @@ import 'telemetry/device.dart';
 const _refreshBufferSeconds = 300;
 const _maxRetries = 2;
 const _retryDelayMs = 1000;
-const _defaultBase = 'https://mobileai.cloud';
+const _defaultBase = 'https://twomilia.com';
 
 class _SessionState {
   final String token;

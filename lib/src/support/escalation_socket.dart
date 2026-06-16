@@ -5,7 +5,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../utils/logger.dart';
 
-/// EscalationSocket — manages a WebSocket connection to the MobileAI platform
+/// EscalationSocket — manages a WebSocket connection to the Twomilia platform
 /// for receiving real-time replies from human support agents.
 ///
 /// Lifecycle:

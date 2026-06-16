@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobileai_flutter/mobileai_flutter.dart';
+import 'package:twomilia_flutter/twomilia_flutter.dart';
 import 'ai_screen_map.dart';
 import 'router.dart';
 
@@ -14,25 +14,25 @@ class ShopFlowApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
-    const mobileAiBaseUrl = String.fromEnvironment(
+    const twomiliaBaseUrl = String.fromEnvironment(
       'EXPO_PUBLIC_MOBILEAI_BASE_URL',
-      defaultValue: 'https://mobileai.cloud',
+      defaultValue: 'https://twomilia.com',
     );
-    const mobileAiAnalyticsKey = String.fromEnvironment(
+    const twomiliaAnalyticsKey = String.fromEnvironment(
       'EXPO_PUBLIC_MOBILEAI_KEY',
       defaultValue: 'mobileai_pub_37aef8662883f2eba40dfc70763f4ef5b1a1a686',
     );
 
-    final normalizedBaseUrl = _normalizeBaseUrl(mobileAiBaseUrl);
+    final normalizedBaseUrl = _normalizeBaseUrl(twomiliaBaseUrl);
     final textProxyUrl = normalizedBaseUrl == null
         ? null
         : '$normalizedBaseUrl/api/v1/hosted-proxy/text';
     final voiceProxyUrl = normalizedBaseUrl == null
         ? null
         : _buildVoiceProxyUrl(normalizedBaseUrl);
-    final proxyHeaders = mobileAiAnalyticsKey.isEmpty
+    final proxyHeaders = twomiliaAnalyticsKey.isEmpty
         ? null
-        : <String, String>{'Authorization': 'Bearer $mobileAiAnalyticsKey'};
+        : <String, String>{'Authorization': 'Bearer $twomiliaAnalyticsKey'};
 
     return AIAgent(
       apiKey: textProxyUrl == null && geminiApiKey.isNotEmpty
@@ -51,10 +51,10 @@ class ShopFlowApp extends StatelessWidget {
       debug: true,
       screenMap: shopFlowScreenMap,
       conversationPersistenceKey: 'shopflow-example',
-      telemetry: mobileAiAnalyticsKey.isEmpty
+      telemetry: twomiliaAnalyticsKey.isEmpty
           ? null
           : TelemetryConfig(
-              analyticsKey: mobileAiAnalyticsKey,
+              analyticsKey: twomiliaAnalyticsKey,
               baseUrl: normalizedBaseUrl,
             ),
       onResult: (result) {

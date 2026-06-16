@@ -53,7 +53,7 @@ enum EscalationProvider { mobileai, custom }
 /// Configuration for human escalation.
 class EscalationConfig {
   /// Where to route the escalation.
-  /// - 'mobileai' (default when analyticsKey is set): ticket goes to MobileAI
+  /// - 'mobileai' (default when analyticsKey is set): ticket goes to Twomilia
   ///   dashboard inbox via POST /api/v1/escalations + WebSocket reply delivery.
   /// - 'custom': fires the onEscalate callback — wire to Intercom, Zendesk, etc.
   final EscalationProvider? provider;

@@ -15,7 +15,7 @@ class ConversationService {
   static const String _deviceIdStorageKey = '@mobileai_flutter_device_id';
 
   static String _normalizeBaseUrl(String? baseUrl) {
-    if (baseUrl == null || baseUrl.isEmpty) return 'https://mobileai.cloud';
+    if (baseUrl == null || baseUrl.isEmpty) return 'https://twomilia.com';
     final trimmed = baseUrl.endsWith('/')
         ? baseUrl.substring(0, baseUrl.length - 1)
         : baseUrl;

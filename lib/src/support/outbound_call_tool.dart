@@ -64,18 +64,18 @@ ToolDefinition createOutboundCallTool(OutboundCallToolDeps deps) {
   return ToolDefinition(
     name: 'start_ai_call',
     description:
-        'Start an outbound AI phone call from the company-owned MobileAI phone number '
+        'Start an outbound AI phone call from the company-owned Twomilia phone number '
         'to a trusted contact configured in the dashboard. '
         'Use this only after investigating the issue and deciding a real human/vendor/partner '
         'phone call is needed, such as a stuck order, delivery coordination, appointment '
         'confirmation, booking partner follow-up, billing/fraud escalation, or external vendor '
         'status check. Never provide or infer a phone number; pass only targetType and targetId '
-        'so MobileAI can look up the trusted contact. This tool requires explicit user approval '
+        'so Twomilia can look up the trusted contact. This tool requires explicit user approval '
         'before dialing.',
     parameters: {
       'targetType': ToolParam(
         type: 'string',
-        description: 'Trusted contact category configured in MobileAI.',
+        description: 'Trusted contact category configured in Twomilia.',
         required: true,
         enumValues: allowedTargetTypes,
       ),

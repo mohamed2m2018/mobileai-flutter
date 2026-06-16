@@ -10,7 +10,7 @@ Use `proxyUrl` and route provider calls through your backend.
 
 ```dart
 AIAgent(
-  proxyUrl: 'https://api.example.com/mobileai/chat',
+  proxyUrl: 'https://api.example.com/twomilia/chat',
   proxyHeaders: {'Authorization': 'Bearer $sessionToken'},
   child: MaterialApp.router(routerConfig: router),
 )
@@ -59,14 +59,14 @@ AIAgent(
 
 ## Telemetry
 
-Use `TelemetryConfig` to enable MobileAI Cloud analytics.
+Use `TelemetryConfig` to enable Twomilia Cloud analytics.
 
 ```dart
 AIAgent(
   telemetry: const TelemetryConfig(
     enabled: true,
-    analyticsKey: 'mobileai_pub_xxxxxxxx',
-    baseUrl: 'https://mobileai.cloud',
+    analyticsKey: 'twomilia_pub_xxxxxxxx',
+    baseUrl: 'https://twomilia.com',
   ),
   child: MaterialApp.router(routerConfig: router),
 )

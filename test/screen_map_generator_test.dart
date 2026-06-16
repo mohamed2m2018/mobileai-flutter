@@ -31,7 +31,7 @@ void main() {
   });
 
   test('screen map generator summarizes simple mapped row structures as durable list identity', () async {
-    final tempDir = await Directory.systemTemp.createTemp('mobileai_screen_map_test_');
+    final tempDir = await Directory.systemTemp.createTemp('twomilia_screen_map_test_');
     addTearDown(() async {
       if (tempDir.existsSync()) {
         await tempDir.delete(recursive: true);

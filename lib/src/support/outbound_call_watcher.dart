@@ -100,7 +100,7 @@ class OutboundCallWatcher {
   }
 
   static String _resolveWsBase(String? proxyUrl) {
-    var root = (proxyUrl ?? 'https://mobileai.cloud')
+    var root = (proxyUrl ?? 'https://twomilia.com')
         .replaceAll(RegExp(r'/$'), '')
         .replaceAll('/api/v1/analytics', '');
     if (root.startsWith('https://')) {

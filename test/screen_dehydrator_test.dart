@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobileai_flutter/mobileai_flutter.dart';
-import 'package:mobileai_flutter/src/core/screen_dehydrator.dart';
+import 'package:twomilia_flutter/twomilia_flutter.dart';
+import 'package:twomilia_flutter/src/core/screen_dehydrator.dart';
 
 void main() {
   test('screen dehydrator uses RN-style element formatting', () {

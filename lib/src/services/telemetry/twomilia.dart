@@ -6,7 +6,7 @@ import 'telemetry_service.dart';
 /// MobileAI — Public static API for consumer event tracking.
 ///
 /// Usage:
-///   import 'package:mobileai_flutter/mobileai_flutter.dart';
+///   import 'package:twomilia_flutter/twomilia_flutter.dart';
 ///   MobileAI.track('purchase_complete', properties: {'total': 29.99});
 ///   MobileAI.identify('user_123', traits: {'plan': 'premium'});
 ///   final flag = MobileAI.getFlag('new_checkout_flow');

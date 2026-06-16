@@ -14,11 +14,11 @@ import 'types.dart';
 ///
 /// Providers:
 /// - 'mobileai' (default when analyticsKey present):
-///   POSTs to MobileAI /api/v1/escalations → gets ticketId + wsUrl
+///   POSTs to Twomilia /api/v1/escalations → gets ticketId + wsUrl
 ///   Opens WebSocket via EscalationSocket → agent reply pushed in real time
 /// - 'custom': fires the consumer's onEscalate callback (backward compatible)
 
-const String _mobileaiHost = 'https://mobileai.cloud';
+const String _twomiliaHost = 'https://twomilia.com';
 
 /// Callback signature for escalation started event.
 typedef OnEscalationStarted = void Function(String ticketId);
@@ -85,7 +85,7 @@ ToolDefinition createEscalateTool({
 
           final response = await http
               .post(
-                Uri.parse('$_mobileaiHost/api/v1/escalations'),
+                Uri.parse('$_twomiliaHost/api/v1/escalations'),
                 headers: {'Content-Type': 'application/json'},
                 body: jsonEncode({
                   'analyticsKey': analyticsKey,

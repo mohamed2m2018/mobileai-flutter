@@ -1,2 +1,2 @@
-@Deprecated('Use package:mobileai_flutter/mobileai_flutter.dart instead.')
-export 'mobileai_flutter.dart';
+@Deprecated('Use package:twomilia_flutter/twomilia_flutter.dart instead.')
+export 'twomilia_flutter.dart';

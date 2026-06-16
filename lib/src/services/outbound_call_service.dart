@@ -8,7 +8,7 @@ import 'telemetry/device.dart' show getDeviceId, initDeviceId;
 import 'telemetry/device_metadata.dart' show getDeviceMetadata;
 
 const String _logTag = 'OutboundCallService';
-const String _defaultHost = 'https://mobileai.cloud';
+const String _defaultHost = 'https://twomilia.com';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -17,7 +17,7 @@ class OutboundCallConfig {
   /// Whether outbound calls are enabled. Default: true when analyticsKey present.
   final bool enabled;
 
-  /// Optional MobileAI-compatible backend root. Defaults to https://mobileai.cloud.
+  /// Optional Twomilia-compatible backend root. Defaults to https://twomilia.com.
   final String? proxyUrl;
 
   /// Optional extra headers sent to the outbound-call endpoint.
@@ -153,7 +153,7 @@ String _resolveBase(String? proxyUrl) {
   return raw;
 }
 
-/// Start an outbound AI call via the MobileAI API.
+/// Start an outbound AI call via the Twomilia API.
 Future<StartOutboundCallResult> startOutboundAiCall({
   required String analyticsKey,
   required OutboundCallRequest request,
@@ -164,7 +164,7 @@ Future<StartOutboundCallResult> startOutboundAiCall({
   if (analyticsKey.isEmpty) {
     return const StartOutboundCallResult(
       ok: false,
-      error: 'MobileAI analyticsKey is required for outbound AI calls.',
+      error: 'Twomilia analyticsKey is required for outbound AI calls.',
     );
   }
 

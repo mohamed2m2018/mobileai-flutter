@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobileai_flutter/mobileai_flutter.dart';
+import 'package:twomilia_flutter/twomilia_flutter.dart';
 
 void main() {
   test('voice proxy connection includes Gemini Live API path', () async {

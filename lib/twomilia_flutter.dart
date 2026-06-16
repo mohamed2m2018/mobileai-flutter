@@ -39,7 +39,7 @@ export 'src/hooks/ai_scope.dart';
 // Services
 export 'src/services/knowledge_base_service.dart';
 export 'src/services/conversation_service.dart';
-export 'src/services/mobileai_knowledge_retriever.dart';
+export 'src/services/twomilia_knowledge_retriever.dart';
 export 'src/services/voice_service.dart';
 export 'src/services/audio_input_service.dart';
 export 'src/services/audio_output_service.dart';

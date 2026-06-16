@@ -1,8 +1,8 @@
-# MobileAI Flutter
+# Twomilia Flutter
 
 A Flutter SDK for adding an in-app AI assistant that can read your widget tree, answer questions, guide users, perform approved actions, and hand off to human support.
 
-[![pub package](https://img.shields.io/pub/v/mobileai_flutter.svg)](https://pub.dev/packages/mobileai_flutter)
+[![pub package](https://img.shields.io/pub/v/twomilia_flutter.svg)](https://pub.dev/packages/twomilia_flutter)
 [![Flutter](https://img.shields.io/badge/flutter-%3E%3D3.24.0-blue.svg)](https://flutter.dev/)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](./LICENSE)
 
@@ -21,7 +21,7 @@ A Flutter SDK for adding an in-app AI assistant that can read your widget tree, 
 
 ## What The SDK Does
 
-MobileAI adds a screen-aware assistant to your Flutter app. It can:
+Twomilia adds a screen-aware assistant to your Flutter app. It can:
 
 - Understand the current screen from the widget tree, semantics, and optional screen map.
 - Answer app-specific questions using your knowledge base and registered data sources.
@@ -39,20 +39,20 @@ The default user-facing mode is **copilot mode**: the assistant can help with ro
 
 ```yaml
 dependencies:
-  mobileai_flutter: ^0.2.5
+  twomilia_flutter: ^0.2.5
 ```
 
 Import:
 
 ```dart
-import 'package:mobileai_flutter/mobileai_flutter.dart';
+import 'package:twomilia_flutter/twomilia_flutter.dart';
 ```
 
 For local development in this monorepo:
 
 ```yaml
 dependencies:
-  mobileai_flutter:
+  twomilia_flutter:
     path: ../mobileai-flutter
 ```
 
@@ -63,7 +63,7 @@ Wrap the top-level app widget that owns navigation.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobileai_flutter/mobileai_flutter.dart';
+import 'package:twomilia_flutter/twomilia_flutter.dart';
 
 final router = GoRouter(
   routes: [
@@ -99,7 +99,7 @@ For production, prefer `proxyUrl` instead of shipping raw provider keys in the a
 
 ```dart
 AIAgent(
-  proxyUrl: 'https://api.example.com/mobileai/chat',
+  proxyUrl: 'https://api.example.com/twomilia/chat',
   proxyHeaders: {'Authorization': 'Bearer $sessionToken'},
   child: MaterialApp.router(routerConfig: router),
 )

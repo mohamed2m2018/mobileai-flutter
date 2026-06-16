@@ -1,6 +1,6 @@
 # Rich UI
 
-MobileAI Flutter can render structured assistant responses as text and app-defined blocks.
+Twomilia Flutter can render structured assistant responses as text and app-defined blocks.
 
 ## Built-In Blocks
 

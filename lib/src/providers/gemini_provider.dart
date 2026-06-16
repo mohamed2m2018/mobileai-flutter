@@ -35,13 +35,13 @@ class GeminiProvider implements AiProvider {
         _apiKey = proxyUrl != null && proxyUrl.isNotEmpty ? 'proxy-key' : (apiKey ?? '') {
     if ((apiKey == null || apiKey.isEmpty) && (proxyUrl == null || proxyUrl.isEmpty)) {
       throw Exception(
-        '[mobileai_flutter] You must provide either an "apiKey" or "proxyUrl" to AIAgent.',
+        '[twomilia_flutter] You must provide either an "apiKey" or "proxyUrl" to AIAgent.',
       );
     }
 
     // Compute config digest for analytics quality metrics
     if (proxyUrl != null && proxyUrl.isNotEmpty) {
-      cfgDigest = proxyUrl.contains('mobileai.cloud')
+      cfgDigest = proxyUrl.contains('twomilia.com')
           ? 'h${_simpleHash(proxyUrl)}'
           : 'c${_simpleHash(proxyUrl)}';
     } else {
@@ -251,7 +251,7 @@ class GeminiProvider implements AiProvider {
           throw Exception('Session token limit reached. Please start a new conversation.');
         }
         if (code == 'budget_exhausted' || code == 'proxy_blocked') {
-          throw Exception('This project has run out of AI credits. Add more credits in the MobileAI dashboard to continue.');
+          throw Exception('This project has run out of AI credits. Add more credits in the Twomilia dashboard to continue.');
         }
         if (code == 'token_rate_limited' || code == 'device_rate_limited') {
           throw Exception('You\'re sending messages too quickly. Please wait a moment and try again.');

@@ -28,7 +28,7 @@ class OpenAIProvider implements AiProvider {
         _headers = _resolveHeaders(apiKey: apiKey, proxyUrl: proxyUrl, proxyHeaders: proxyHeaders) {
     // Compute config digest for analytics quality metrics
     if (proxyUrl != null && proxyUrl.isNotEmpty) {
-      cfgDigest = proxyUrl.contains('mobileai.cloud')
+      cfgDigest = proxyUrl.contains('twomilia.com')
           ? 'h${_simpleHash(proxyUrl)}'
           : 'c${_simpleHash(proxyUrl)}';
     } else {
@@ -69,7 +69,7 @@ class OpenAIProvider implements AiProvider {
       };
     }
     throw Exception(
-      '[mobileai_flutter] You must provide either "apiKey" or "proxyUrl" to use the OpenAI provider.',
+      '[twomilia_flutter] You must provide either "apiKey" or "proxyUrl" to use the OpenAI provider.',
     );
   }
 

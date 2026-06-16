@@ -35,7 +35,7 @@
 
 ## 0.2.2
 
-- Default hosted MobileAI services and example proxy config to `https://mobileai.cloud`.
+- Default hosted Twomilia services and example proxy config to `https://twomilia.com`.
 - Treat generated screen maps as route hints while keeping the live router/adapter as the navigation source of truth.
 - Simplify `go_router` setup by allowing `AIAgent` to build the default adapter from the router.
 

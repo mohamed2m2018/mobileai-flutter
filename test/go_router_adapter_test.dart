@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobileai_flutter/src/navigation/go_router_adapter.dart';
+import 'package:twomilia_flutter/src/navigation/go_router_adapter.dart';
 
 void main() {
   test('GoRouterAdapter prefers the top matched route over stale route information', () {

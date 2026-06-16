@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobileai_flutter/mobileai_flutter.dart';
-import 'package:mobileai_flutter/src/core/element_tree_walker.dart';
+import 'package:twomilia_flutter/twomilia_flutter.dart';
+import 'package:twomilia_flutter/src/core/element_tree_walker.dart';
 
 void main() {
   testWidgets('widget tree walker finds tabs, rows, and toggles', (tester) async {

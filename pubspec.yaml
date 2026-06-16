@@ -1,5 +1,5 @@
-name: mobileai_flutter
-description: "MobileAI for Flutter. Embed UI-aware AI agents with chat, rich blocks, zones, navigation, and support workflows."
+name: twomilia_flutter
+description: "Twomilia for Flutter. Embed UI-aware AI agents with chat, rich blocks, zones, navigation, and support workflows."
 version: 0.2.7
 homepage: "https://github.com/mohamed2m2018/mobileai-flutter"
 repository: "https://github.com/mohamed2m2018/mobileai-flutter"

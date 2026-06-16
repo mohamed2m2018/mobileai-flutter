@@ -25,7 +25,7 @@ class ExtendedTelemetryEvent {
   });
 }
 
-/// TelemetryService — Batches and sends analytics events to MobileAI Cloud.
+/// TelemetryService — Batches and sends analytics events to Twomilia Cloud.
 ///
 /// Features:
 /// - Event batching (flush every N seconds or N events)
@@ -202,7 +202,7 @@ class TelemetryService {
 
   static String _normalizeBaseUrl(String? baseUrl) {
     if (baseUrl == null || baseUrl.isEmpty) {
-      return 'https://mobileai.cloud';
+      return 'https://twomilia.com';
     }
     return baseUrl.endsWith('/')
         ? baseUrl.substring(0, baseUrl.length - 1)

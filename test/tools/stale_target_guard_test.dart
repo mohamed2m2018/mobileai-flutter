@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobileai_flutter/src/core/types.dart';
-import 'package:mobileai_flutter/src/tools/types.dart';
+import 'package:twomilia_flutter/src/core/types.dart';
+import 'package:twomilia_flutter/src/tools/types.dart';
 
 void main() {
   group('stale target guard', () {

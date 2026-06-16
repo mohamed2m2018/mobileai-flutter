@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:mobileai_flutter/src/core/types.dart';
-import 'package:mobileai_flutter/src/providers/gemini_provider.dart';
+import 'package:twomilia_flutter/src/core/types.dart';
+import 'package:twomilia_flutter/src/providers/gemini_provider.dart';
 
 void main() {
   test('Gemini proxy parser falls back gracefully when content parts are missing', () async {

@@ -1,6 +1,6 @@
 # Guardrails
 
-MobileAI Flutter is designed as delegated assistance, not user impersonation. The assistant can propose actions, but runtime code owns execution.
+Twomilia Flutter is designed as delegated assistance, not user impersonation. The assistant can propose actions, but runtime code owns execution.
 
 ## Safety Layers
 

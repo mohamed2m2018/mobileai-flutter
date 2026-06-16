@@ -1,4 +1,4 @@
-# mobileai_flutter Parity Matrix
+# twomilia_flutter Parity Matrix
 
 This file tracks parity against the React Native SDK. Status values:
 
@@ -118,6 +118,6 @@ This file tracks parity against the React Native SDK. Status values:
 | Subsystem | Status | Notes |
 |---|---|---|
 | Separate Flutter package | implemented | `mobileai-flutter/` is fully separate from RN/web. |
-| `mobileai_flutter` package identity | implemented | Metadata/import surface renamed. |
-| Example app updated | implemented | Example now imports `mobileai_flutter`. |
+| `twomilia_flutter` package identity | implemented | Metadata/import surface renamed. |
+| Example app updated | implemented | Example now imports `twomilia_flutter`. |
 | README rewritten for new package | implemented | Docs now describe the Flutter package directly. |

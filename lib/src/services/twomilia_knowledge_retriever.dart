@@ -20,7 +20,7 @@ class MobileAIKnowledgeRetrieverOptions {
 }
 
 String _normalizeBaseUrl(String? baseUrl) {
-  if (baseUrl == null || baseUrl.isEmpty) return 'https://mobileai.cloud';
+  if (baseUrl == null || baseUrl.isEmpty) return 'https://twomilia.com';
   final trimmed = baseUrl.endsWith('/')
       ? baseUrl.substring(0, baseUrl.length - 1)
       : baseUrl;
@@ -62,7 +62,7 @@ class _HostedKnowledgeRetriever implements KnowledgeRetriever {
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
         Logger.warn(
-          'MobileAI knowledge query failed: HTTP ${response.statusCode}',
+          'Twomilia knowledge query failed: HTTP ${response.statusCode}',
         );
         return const [];
       }
@@ -86,7 +86,7 @@ class _HostedKnowledgeRetriever implements KnowledgeRetriever {
           )
           .toList(growable: false);
     } catch (error) {
-      Logger.error('MobileAI knowledge query failed: $error');
+      Logger.error('Twomilia knowledge query failed: $error');
       return const [];
     }
   }
