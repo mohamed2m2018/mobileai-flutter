@@ -439,7 +439,7 @@ class GeminiProvider implements AiProvider {
                 'JSON object string containing only the arguments for action_name. Use "{}" when the action takes no parameters.',
           },
         },
-        'required': <String>['plan', 'action_name'],
+        'required': <String>['plan', 'action_name', 'action_input'],
       },
     };
     _cachedToolCountJson = tools.length;
@@ -486,7 +486,7 @@ class GeminiProvider implements AiProvider {
             description: 'JSON object string containing only the arguments for action_name. Use "{}" when the action takes no parameters.',
           ),
         },
-        requiredProperties: ['plan', 'action_name'],
+        requiredProperties: ['plan', 'action_name', 'action_input'],
       ),
     );
     _cachedToolCount = tools.length;
