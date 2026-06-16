@@ -45,6 +45,17 @@ class TypeTool implements AgentTool {
       if (target.element == null) {
         return 'Cannot type into [$index] ${target.label}: no widget reference available.';
       }
+      // Code-enforced credential guard: never let the agent fill a password /
+      // secret field — the value would pass through the AI. Mirrors web
+      // (isSecretField) and RN (secureTextEntry). The prompt rule alone does
+      // not stop the model once a user volunteers a secret in chat.
+      if (_isSecretField(target.element!)) {
+        return '🔒 Refused to type into [$index] ${target.label} — it is a password or '
+            'other secret field. For the user\'s security a credential must NEVER pass '
+            'through the AI or be filled by it. Do not attempt to fill it and do not ask '
+            'for it in chat. Instead, ask the user to type it directly into this field '
+            'themselves, and continue once they confirm it is filled.';
+      }
       final success = _performType(target.element!, text);
       if (!success) {
         return 'Failed to type into [$index] ${target.label}. It might be read-only.';
@@ -54,6 +65,33 @@ class TypeTool implements AgentTool {
       Logger.error('Type execution failed: $e');
       throw Exception('Failed to type text: $e');
     }
+  }
+
+  /// True when the element is (or wraps) an obscured/password field. Covers
+  /// TextField.obscureText and the underlying EditableText.obscureText (which
+  /// also catches TextFormField and custom wrappers).
+  bool _isSecretField(Element element) {
+    if (!element.mounted) return false;
+    final widget = element.widget;
+    if (widget is TextField && widget.obscureText) return true;
+    if (widget is EditableText && widget.obscureText) return true;
+    var found = false;
+    void visit(Element e) {
+      if (found) return;
+      final w = e.widget;
+      if (w is EditableText && w.obscureText) {
+        found = true;
+        return;
+      }
+      if (w is TextField && w.obscureText) {
+        found = true;
+        return;
+      }
+      e.visitChildElements(visit);
+    }
+
+    visit(element);
+    return found;
   }
 
   bool _performType(Element element, String text) {
