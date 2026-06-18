@@ -52,6 +52,7 @@ class AgentRuntime {
   /// Approval workflow state for copilot mode.
   AppActionApprovalScope _approvalScope = AppActionApprovalScope.none;
   AppActionApprovalSource _approvalSource = AppActionApprovalSource.none;
+  bool _hasExplicitApprovalThisSession = false;
 
   /// Semantic action-safety state for the current task.
   final Map<String, ActionSafetyDecision> _actionSafetyCache = {};
@@ -263,6 +264,9 @@ class AgentRuntime {
   void _grantWorkflowApproval(AppActionApprovalSource source) {
     _approvalScope = AppActionApprovalScope.workflow;
     _approvalSource = source;
+    if (source == AppActionApprovalSource.explicitButton) {
+      _hasExplicitApprovalThisSession = true;
+    }
     Logger.info('Workflow approval granted (source: $source)');
   }
 
@@ -758,23 +762,22 @@ class AgentRuntime {
       ToolDefinition(
         name: 'ask_user',
         description:
-            'Communicate with the user. Use this to ask questions, request explicit permission for app actions, answer a direct question, or collect missing low-risk workflow data that can authorize routine in-flow steps.',
+            'Communicate with the user. Use this to ask questions, collect information, request explicit permission for app actions, or answer a direct user question.',
         parameters: {
           'question': ToolParam(
             type: 'string',
             description: 'The message or question to say to the user',
             required: true,
           ),
-          'request_app_action': ToolParam(
+          'collect_input': ToolParam(
             type: 'boolean',
             description:
-                'Set to true when requesting permission to take an action in the app (navigate, tap, investigate). Shows explicit approval buttons to the user.',
+                'Are you collecting information or input from the user? Set to true when asking a question, collecting preferences, requesting data, or answering the user (shows text input). Set to false ONLY when requesting yes/no permission to perform a specific app action you described in your question (shows approval buttons).',
             required: true,
           ),
           'grants_workflow_approval': ToolParam(
             type: 'boolean',
-            description:
-                'Optional. Set to true only when asking for missing low-risk input or a low-risk selection that you will directly apply in the current action workflow. If the user answers, their answer authorizes routine in-flow actions like typing/selecting/toggling, but NOT irreversible final commits or support investigations.',
+            description: 'Internal use only. Do not set this parameter.',
             required: false,
           ),
         },
@@ -945,8 +948,7 @@ class AgentRuntime {
         const ActionSafetyDecision(
           decision: ActionSafetyDecisionKind.ask,
           reason: 'Tool effect "stateModify" may update app state.',
-          userMessage:
-              'This may update something in the app. Do you want me to continue?',
+          userMessage: 'Make this change?',
           confidence: 1,
           capability: ActionSafetyCapability.stateModify,
           risk: ActionSafetyRisk.medium,
@@ -967,8 +969,7 @@ class AgentRuntime {
         ActionSafetyDecision(
           decision: ActionSafetyDecisionKind.ask,
           reason: 'Tool effect "${toolEffect.name}" requires confirmation.',
-          userMessage:
-              'This action may make an important change. Do you want me to continue?',
+          userMessage: 'This makes an important change to your account. Approve?',
           confidence: 1,
           capability: _capabilityForToolEffect(toolEffect),
           risk: toolEffect == ToolEffect.destructive
@@ -1031,8 +1032,7 @@ class AgentRuntime {
           reason: config.actionSafety.classifierDisabled
               ? 'Semantic action safety classifier is disabled by configuration.'
               : 'No semantic action safety classifier is available.',
-          userMessage:
-              'I am not fully sure what this action will do. Do you want me to continue?',
+          userMessage: 'Go ahead with this action?',
           capability: ActionSafetyCapability.unknown,
           scope: ActionSafetyScope.unknownTask,
           risk: ActionSafetyRisk.medium,
@@ -1100,7 +1100,7 @@ class AgentRuntime {
           confidence: 0,
           reason: 'Semantic action safety classifier failed: $error',
           userMessage:
-              'I am not fully sure this action is safe to do automatically. Do you want me to continue?',
+              'Continue with this action?',
           capability: ActionSafetyCapability.unknown,
           scope: ActionSafetyScope.unknownTask,
           risk: ActionSafetyRisk.medium,
@@ -1148,7 +1148,7 @@ class AgentRuntime {
         reason:
             'Safety confidence ${confidence.toStringAsFixed(2)} is below the allow threshold.',
         userMessage:
-            'I am not fully sure this action is safe to do automatically. Do you want me to continue?',
+            'Continue with this action?',
       );
     }
 
@@ -1737,15 +1737,22 @@ class AgentRuntime {
       } else if (config.onAskUser == null) {
         result = '❓ $cleanQuestion';
       } else {
-        final requestAppAction = args['request_app_action'] == true;
-        final grantsWorkflowApproval = args['grants_workflow_approval'] == true;
+        // collect_input=true → freeform text input
+        // collect_input=false → approval buttons (app-action permission)
+        // Legacy: accept old request_app_action param too
+        final collectInput = args.containsKey('collect_input')
+            ? args['collect_input'] != false
+            : args['request_app_action'] != true;
+        final needsApproval = !collectInput;
+        final grantsWorkflowApproval =
+            args['grants_workflow_approval'] == true || needsApproval;
         final answer = await config.onAskUser!(
           AskUserRequest(
             question: cleanQuestion,
-            kind: requestAppAction
+            kind: needsApproval
                 ? AskUserKind.approval
                 : AskUserKind.freeform,
-            requestAppAction: requestAppAction,
+            requestAppAction: needsApproval,
             grantsWorkflowApproval: grantsWorkflowApproval,
           ),
         );
@@ -1756,7 +1763,7 @@ class AgentRuntime {
         } else if (answer == '__APPROVAL_REJECTED__') {
           result = 'Action not approved by user.';
         } else {
-          if (grantsWorkflowApproval && answer.trim().isNotEmpty) {
+          if (grantsWorkflowApproval && _hasExplicitApprovalThisSession && answer.trim().isNotEmpty) {
             _grantWorkflowApproval(AppActionApprovalSource.userInput);
           }
           result = 'User answered: $answer';

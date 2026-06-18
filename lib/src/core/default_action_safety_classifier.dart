@@ -136,8 +136,7 @@ class DefaultActionSafetyClassifier implements ActionSafetyClassifier {
       confidence: 0,
       reason:
           'Default guard could not classify this action with a valid model decision.',
-      userMessage:
-          'I am not fully sure what this action will do. Do you want me to continue?',
+      userMessage: 'Go ahead with this action?',
       capability: ActionSafetyCapability.unknown,
       scope: ActionSafetyScope.unknownTask,
       risk: ActionSafetyRisk.medium,
